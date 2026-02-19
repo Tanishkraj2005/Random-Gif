@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import Spinner from './Spinner';
 
@@ -9,7 +9,7 @@ function Tag() {
   const [gif, setGif] = useState('');
   const [loading, setLoading] = useState(false);
 
-  async function fetchData() {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const url = `https://api.giphy.com/v1/gifs/random?api_key=${API_KEY}&tag=${tag}`;
@@ -21,11 +21,11 @@ function Tag() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [tag]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const clickHandler = () => {
     fetchData();
@@ -41,7 +41,7 @@ function Tag() {
       "
     >
       <h1 className="text-xl sm:text-2xl font-bold uppercase underline mt-2">
-        Random {tag || "Tag"} GIF
+        Random {tag || 'Tag'} GIF
       </h1>
 
       {loading ? (
